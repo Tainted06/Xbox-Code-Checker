@@ -99,5 +99,5 @@ func main() {
     }
 
 	fmt.Println("\033[36m", "\nFinished checking codes!")
-	ime.Sleep(30 * time.Second)   
+	time.Sleep(30 * time.Second)   
 }
