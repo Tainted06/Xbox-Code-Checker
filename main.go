@@ -20,7 +20,7 @@ func main() {
 	cmd.Stdout = os.Stdout; cmd.Run()
 
 	// Title screen
-	fmt.Println("\033[36m█ █ ██▄ ███ █ █    ███ ███ ██▄ ███    ███ █ █ ███ ███ █ █ ███ ███\n █  █▄█ █ █  █     █   █ █ █ █ █▄     █   █▄█ █▄  █   ██▄ █▄  █▄ \n█ █ █▄█ █▄█ █ █    ███ █▄█ ███ █▄▄    ███ █ █ █▄▄ ███ █ █ █▄▄ █ █\nBy: Tainted [tainted.dev] [github.com/Tainted06]\n\033[0m")
+	fmt.Println("\033[36m █ █ ██▄ ███ █ █    ███ ███ ██▄ ███    ███ █ █ ███ ███ █ █ ███ ███\n  █  █▄█ █ █  █     █   █ █ █ █ █▄     █   █▄█ █▄  █   ██▄ █▄  █▄ \n █ █ █▄█ █▄█ █ █    ███ █▄█ ███ █▄▄    ███ █ █ █▄▄ ███ █ █ █▄▄ █ █\n By: Tainted [tainted.dev] [github.com/Tainted06]\n\033[0m")
 
 	// Reading WLID
 	wlid, err := os.ReadFile("input\\WLID.txt")
@@ -66,35 +66,42 @@ func main() {
 		var json_content map[string]interface{}
 		json.Unmarshal([]byte(content), &json_content)
 
+		// Checking for ratelimit
+		if resp.StatusCode == 429 {
+			fmt.Println("\033[31m", " [-] Ratelimit! [For a version with proxies and threading visit https://tainted.tools]")
+		} else
+
 		// Checking response
-		if (err1 != nil || err2 != nil || err3 != nil) {
-			fmt.Println("\033[31m", "[-] Error: ", err1, err2, err3)
-		} else if strings.Contains(string(content), "tokenState") {
-			tknstate := json_content["tokenState"].(string)
-			if string(tknstate) == "Active" {
-				fmt.Println("\033[32m", "[+] " + fileScanner.Text()[0:17] + "-XXXXX-XXXXX is valid!")
-				f, _ := os.OpenFile("output\\working.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-				defer f.Close()
-				f.WriteString(fileScanner.Text() + "\n");
-			} else if string(tknstate) == "Redeemed" {
-				fmt.Println("\033[31m", "[-] " + fileScanner.Text()[0:17] + "-XXXXX-XXXXX is used!")
-				f, _ := os.OpenFile("output\\used.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-				defer f.Close()
-				f.WriteString(fileScanner.Text() + "\n");
+		{
+			if (err1 != nil || err2 != nil || err3 != nil) {
+				fmt.Println("\033[31m", " [-] Error: ", err1, err2, err3)
+			} else if strings.Contains(string(content), "tokenState") {
+				tknstate := json_content["tokenState"].(string)
+				if string(tknstate) == "Active" {
+					fmt.Println("\033[32m", " [+] " + fileScanner.Text()[0:17] + "-XXXXX-XXXXX is valid!")
+					f, _ := os.OpenFile("output\\working.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+					defer f.Close()
+					f.WriteString(fileScanner.Text() + "\n");
+				} else if string(tknstate) == "Redeemed" {
+					fmt.Println("\033[31m", " [-] " + fileScanner.Text()[0:17] + "-XXXXX-XXXXX is used!")
+					f, _ := os.OpenFile("output\\used.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+					defer f.Close()
+					f.WriteString(fileScanner.Text() + "\n");
+				}
+			} else if json_content["code"] != "undefined" {
+				if json_content["code"] == "NotFound" {
+					fmt.Println("\033[31m", " [-] " + fileScanner.Text()[0:17] + "-XXXXX-XXXXX is invalid!")
+					f, _ := os.OpenFile("output\\invalid.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+					defer f.Close()
+					f.WriteString(fileScanner.Text() + "\n");
+				} else if json_content["code"] == "Unauthorized" {
+					fmt.Println("\033[31m", " [-] Error: Invalid WLID")
+					time.Sleep(5 * time.Second)   
+					os.Exit(1)
+				}
+			} else {
+				fmt.Println("\033[31m", " [-] Error: " + string(content))
 			}
-		} else if json_content["code"] != "undefined" {
-			if json_content["code"] == "NotFound" {
-				fmt.Println("\033[31m", "[-] " + fileScanner.Text()[0:17] + "-XXXXX-XXXXX is invalid!")
-				f, _ := os.OpenFile("output\\invalid.txt", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-				defer f.Close()
-				f.WriteString(fileScanner.Text() + "\n");
-			} else if json_content["code"] == "Unauthorized" {
-				fmt.Println("\033[31m", "[-] Error: Invalid WLID")
-				time.Sleep(5 * time.Second)   
-				os.Exit(1)
-			}
-		} else {
-			fmt.Println("\033[31m", "[-] Error: " + string(content))
 		}
     }
 
