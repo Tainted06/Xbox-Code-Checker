@@ -11,6 +11,10 @@ import (
 	"time"
 	"fmt"
 	"os"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"net/url"
 )
 
 func main() {  
@@ -20,7 +24,7 @@ func main() {
 	cmd.Stdout = os.Stdout; cmd.Run()
 
 	// Title screen
-	fmt.Println("\033[36m █ █ ██▄ ███ █ █    ███ ███ ██▄ ███    ███ █ █ ███ ███ █ █ ███ ███\n  █  █▄█ █ █  █     █   █ █ █ █ █▄     █   █▄█ █▄  █   ██▄ █▄  █▄ \n █ █ █▄█ █▄█ █ █    ███ █▄█ ███ █▄▄    ███ █ █ █▄▄ ███ █ █ █▄▄ █ █\n By: Tainted [tainted.dev] [github.com/Tainted06]\n\033[0m")
+	fmt.Println("\033[36m █ █ ██▄ ███ █ █    ███ ███ ██▄ ███    ███z █ █ ███ ███ █ █ ███ ███\n  █  █▄█ █ █  █     █   █ █ █ █ █▄     █   █▄█ █▄  █   ██▄ █▄  █▄ \n █ █ █▄█ █▄█ █ █    ███ █▄█ ███ █▄▄    ███ █ █ █▄▄ ███ █ █ █▄▄ █ █\n By: Tainted [tainted.dev] [github.com/Tainted06]\n\033[0m")
 
 	// Reading WLID
 	wlid, err := os.ReadFile("input\\WLID.txt")
