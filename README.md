@@ -3,7 +3,8 @@
 2. [How to run from compiled](https://github.com/Tainted06/Xbox-Code-Checker#run-from-compiled)
 3. [How to run from source](https://github.com/Tainted06/Xbox-Code-Checker#run-from-source)
 4. [What WLID is and how to get it](https://github.com/Tainted06/Xbox-Code-Checker#what-is-wlid-and-how-to-get-it) 
-5. [Other](https://github.com/Tainted06/Xbox-Code-Checker#other)
+5. [Using multiple WLIDs](https://github.com/Tainted06/Xbox-Code-Checker#using-multiple-wlids) 
+6. [Other](https://github.com/Tainted06/Xbox-Code-Checker#other)
 
 # Overview 
 This is a simple proof-of-concept tool to check Xbox codes. This could be used to check Xbox gamepass codes from discord nitro or anything else. It just sends a single request for checking the code. I'll probably be adding threading, multi-account support, and maybe input of email:password instead of getting your WLID and adding it.
@@ -44,6 +45,9 @@ How to get it:
 6. Click it, look at the headers
 7. Find where it says Authorization, right-click the value of authorization, and click copy value
 8. This is your WLID
+
+# Using Multiple WLIDs
+You can use multiple WLIDs with this tool, just add each wlid on a new line in the WLID input file.
 
 # Other
 This is 100% for educational reasons, don't use it for anything else. This tool is free for people to use and learn from, don't try selling it.
