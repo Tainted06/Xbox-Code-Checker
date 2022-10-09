@@ -37,7 +37,16 @@ func main() {
 	fileScannerWLIDs.Split(bufio.ScanLines)
 	var wlids []string
 	for fileScannerWLIDs.Scan() {
-		wlids = append(wlids, string(fileScannerWLIDs.Text()))
+		if strings.Contains(fileScannerWLIDs.Text(), "WLID1.0=") {
+			wlids = append(wlids, string(fileScannerWLIDs.Text()))
+		} else {
+			wlids = append(wlids, "WLID1.0=\"" + string(fileScannerWLIDs.Text()) + "\"")
+		}		
+	}
+	if len(wlids) == 0 {
+		fmt.Println("\033[31m No WLIDs found in input\\WLID.txt")
+		time.Sleep(5 * time.Second)
+		os.Exit(1)
 	}
 
 	// Reading codes
@@ -54,6 +63,11 @@ func main() {
 	var codes []string
 	for fileScannerCodes.Scan() {
 		codes = append(codes, string(fileScannerCodes.Text()))
+	}
+	if len(codes) == 0 {
+		fmt.Println("\033[31m No codes found in input\\codes.txt")
+		time.Sleep(5 * time.Second)
+		os.Exit(1)
 	}
 
 	// Starting amount
