@@ -1,3 +1,10 @@
+# Paid verion avaliable!
+- Input is email:password, not WLID
+- Can handle multiple accounts better
+- Has proxy support
+- Better output and fixed issues with the geography
+## Contact @TaintedDev on telegram or @Tainted.Dev on discord for more information
+
 # Xbox Code Checker
 1. [Overview](https://github.com/Tainted06/Xbox-Code-Checker#xbox-code-checker)
 2. [How to run from compiled](https://github.com/Tainted06/Xbox-Code-Checker#run-from-compiled)
