@@ -1,5 +1,6 @@
 # Paid verion avaliable!
 - Input is email:password, not WLID
+- Saves the activation date and the email that activated used codes
 - Can handle multiple accounts better
 - Has proxy support
 - Better output and fixed issues with the geography
