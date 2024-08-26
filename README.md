@@ -1,9 +1,24 @@
+<div align="center">
+    <h1>Xbox/Microsoft Code Checker</h1>
+    <p>Checks Microsoft/Xbox codes for valid, invalid, and used codes! This does not check Windows licenses. A paid version with more features is avaliable, contact @TaintedDev on telegram for more information.</p>
+    <img src="https://img.shields.io/github/downloads/Tainted06/Xbox-Code-Checker/total?style=flat">
+    <img src="https://img.shields.io/github/stars/Tainted06/Xbox-Code-Checker?style=flat">
+    <img src="https://img.shields.io/github/forks/Tainted06/Xbox-Code-Checker?style=flat">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=Tainted06_Xbox-Code-Checker&metric=ncloc"/>
+    <br>
+    <img src="https://github.com/Tainted06/Xbox-Code-Checker/blob/main/github-demo-0.jpg?raw=true">
+    <br>
+    <p><i>⭐ Star the repo to support future projects 🙏</i></p>
+</div>
+
 # Paid verion avaliable!
 - Input is email:password, not WLID
 - Can handle multiple accounts better
 - Has proxy support
-- Better output and fixed issues with the geography
+- Better output and fixed issues with the geography locked codes
 ## Contact @TaintedDev on telegram or @Tainted.Dev on discord for more information
+<br>
+<img src="https://github.com/Tainted06/Xbox-Code-Checker/blob/main/github-demo-1.jpg?raw=true">
 
 # Xbox Code Checker
 1. [Overview](https://github.com/Tainted06/Xbox-Code-Checker#xbox-code-checker)
@@ -14,7 +29,7 @@
 6. [Other](https://github.com/Tainted06/Xbox-Code-Checker#other)
 
 # Overview 
-This is a simple proof-of-concept tool to check Xbox codes. This could be used to check Xbox gamepass codes from discord nitro or anything else. It just sends a single request for checking the code. I'll probably be adding threading, multi-account support, and maybe input of email:password instead of getting your WLID and adding it.
+This is a simple proof-of-concept tool to check Xbox codes. This could be used to check Xbox gamepass codes from discord nitro or anything else. It just sends a single request for checking the code. 
 
 **This is my first time programming in GoLang, so the code isn't perfect, if there's something that could be better feel free to make a [pull request](https://github.com/Tainted06/Xbox-Code-Checker/pulls) or an [issue](https://github.com/Tainted06/Xbox-Code-Checker/issues) and I'll look into it!**
 
@@ -58,3 +73,7 @@ You can use multiple WLIDs with this tool, just add each wlid on a new line in t
 
 # Other
 This is 100% for educational reasons, don't use it for anything else. This tool is free for people to use and learn from, don't try selling it.
+
+
+# Credits
+- The first part of this readme was inspired by https://github.com/itschasa/Discord-Backup
