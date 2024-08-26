@@ -4,9 +4,8 @@
     <img src="https://img.shields.io/github/downloads/Tainted06/Xbox-Code-Checker/total?style=flat">
     <img src="https://img.shields.io/github/stars/Tainted06/Xbox-Code-Checker?style=flat">
     <img src="https://img.shields.io/github/forks/Tainted06/Xbox-Code-Checker?style=flat">
-    <img src="https://sonarcloud.io/api/project_badges/measure?project=Tainted06_Xbox-Code-Checker&metric=ncloc"/>
     <br>
-    <img src="https://github.com/Tainted06/Xbox-Code-Checker/blob/main/github-demo-0.jpg?raw=true">
+    <img src="https://github.com/Tainted06/Xbox-Code-Checker/blob/main/github-demo-0.png?raw=true">
     <br>
     <p><i>⭐ Star the repo to support future projects 🙏</i></p>
 </div>
