@@ -4,9 +4,9 @@
 
 [![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
 [![CustomTkinter](https://img.shields.io/badge/CustomTkinter-5.2.0+-green.svg)](https://github.com/TomSchimansky/CustomTkinter)
-[![License](https://img.shields.io/badge/License-Educational-orange.svg)](#лицензия)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](#лицензия)
 
-Полностью переписанная версия оригинального Xbox Code Checker с современным интерфейсом и улучшенной функциональностью.
+Полностью переписанная версия [оригинального Xbox Code Checker](https://github.com/Tainted06/Xbox-Code-Checker) с современным интерфейсом на Python и улучшенной функциональностью.
 
 ## ✨ Основные возможности
 
