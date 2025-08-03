@@ -1,0 +1,8 @@
+# Пример файла Xbox кодов
+# Замените на реальные Xbox коды
+# Поддерживаются форматы:
+# XXXXX-XXXXX-XXXXX-XXXXX-XXXXX (с дефисами)
+# XXXXXXXXXXXXXXXXXXXXXXXXX (без дефисов - будет автоматически отформатирован)
+XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+YYYYY-YYYYY-YYYYY-YYYYY-YYYYY
+QHR663JVTVWGTVXJXW4QR767Z

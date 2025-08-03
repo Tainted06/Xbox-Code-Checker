@@ -1,78 +1,151 @@
-<div align="center">
-    <h1>Xbox/Microsoft Code Checker</h1>
-    <p>Checks Microsoft/Xbox codes for valid, invalid, and used codes! This does not check Windows licenses. A paid version with more features is avaliable, contact @TaintedDev on telegram for more information.</p>
-    <img src="https://img.shields.io/github/downloads/Tainted06/Xbox-Code-Checker/total?style=flat">
-    <img src="https://img.shields.io/github/stars/Tainted06/Xbox-Code-Checker?style=flat">
-    <img src="https://img.shields.io/github/forks/Tainted06/Xbox-Code-Checker?style=flat">
-    <br>
-    <img src="https://github.com/Tainted06/Xbox-Code-Checker/blob/main/github-demo-0.png?raw=true">
-    <br>
-    <p><i>⭐ Star the repo to support future projects 🙏</i></p>
-</div>
+# Xbox Code Checker GUI
 
-# Paid verion avaliable!
-- Input is email:password, not WLID
-- Can handle multiple accounts better
-- Has proxy support
-- Better output and fixed issues with the geography locked codes
-## Contact @TaintedDev on telegram or @Tainted.Dev on discord for more information
-<br>
-<img src="https://github.com/Tainted06/Xbox-Code-Checker/blob/main/github-demo-1.jpg?raw=true">
+> 🎮 Современное Python GUI приложение для пакетной проверки валидности Xbox/Microsoft кодов
 
-# Xbox Code Checker
-1. [Overview](https://github.com/Tainted06/Xbox-Code-Checker#xbox-code-checker)
-2. [How to run from compiled](https://github.com/Tainted06/Xbox-Code-Checker#run-from-compiled)
-3. [How to run from source](https://github.com/Tainted06/Xbox-Code-Checker#run-from-source)
-4. [What WLID is and how to get it](https://github.com/Tainted06/Xbox-Code-Checker#what-is-wlid-and-how-to-get-it) 
-5. [Using multiple WLIDs](https://github.com/Tainted06/Xbox-Code-Checker#using-multiple-wlids) 
-6. [Other](https://github.com/Tainted06/Xbox-Code-Checker#other)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
+[![CustomTkinter](https://img.shields.io/badge/CustomTkinter-5.2.0+-green.svg)](https://github.com/TomSchimansky/CustomTkinter)
+[![License](https://img.shields.io/badge/License-Educational-orange.svg)](#лицензия)
 
-# Overview 
-This is a simple proof-of-concept tool to check Xbox codes. This could be used to check Xbox gamepass codes from discord nitro or anything else. It just sends a single request for checking the code. 
+Полностью переписанная версия оригинального Xbox Code Checker с современным интерфейсом и улучшенной функциональностью.
 
-**This is my first time programming in GoLang, so the code isn't perfect, if there's something that could be better feel free to make a [pull request](https://github.com/Tainted06/Xbox-Code-Checker/pulls) or an [issue](https://github.com/Tainted06/Xbox-Code-Checker/issues) and I'll look into it!**
+## ✨ Основные возможности
 
-# Run from compiled
-**Only works on windows**
-1. Open [Releases](https://github.com/Tainted06/Xbox-Code-Checker/releases)
-2. Download the latest version
-3. Extract the files out of the .zip file
-4. Add your codes in input\codes.txt
-5. Get your [WLID](https://github.com/Tainted06/Xbox-Code-Checker#what-is-wlid-and-how-to-get-it) and add it in input\wlid.txt
-6. Run XboxChecker.exe
-7. After it's done the working, used, and invalid codes will be saved output\working.txt, output\used.txt, output\invalid.txt
+- 🎨 **Современный GUI** - Интерфейс на CustomTkinter с поддержкой темной/светлой тем
+- ⚡ **Пакетная обработка** - Проверка множества кодов одновременно с отслеживанием прогресса
+- 🔄 **Многопоточность** - Настраиваемое количество потоков для оптимальной производительности
+- ⏯️ **Полный контроль** - Функции паузы, продолжения и остановки процесса
+- 📊 **Экспорт результатов** - Сохранение в форматах TXT, CSV и JSON
+- 🔧 **Гибкие настройки** - Настройка задержек, количества потоков и других параметров
+- 🔍 **Детальный просмотр** - Просмотр результатов с фильтрацией и поиском
+- 📦 **Standalone сборка** - Компиляция в исполняемый файл без зависимостей
+- 🔄 **Автоформатирование** - Поддержка кодов с дефисами и без них
+- 🛡️ **Система повторов** - Экспоненциальная задержка при неудачных запросах
+- 📝 **Логирование** - Детальное отслеживание ошибок и событий
 
-# Run from source
-1. Download GoLang from their [website](https://go.dev/dl/)
-2. Go to [Releases](https://github.com/Tainted06/Xbox-Code-Checker/releases)
-3. Download the *source code* of the latest release
-4. Extract the files
-5. Add your codes in input\codes.txt
-6. Get your [WLID](https://github.com/Tainted06/Xbox-Code-Checker#what-is-wlid-and-how-to-get-it) and add it in input\wlid.txt
-7. Open terminal/cmd, navigate to the directory of the code
-8. Run the command `go run main.go` or `go build`
-9. After it's done the working, used, and invalid codes will be saved output\working.txt, output\used.txt, output\invalid.txt
+## 🚀 Быстрый старт
 
-# What is WLID and how to get it
-WLID *(probably stands for Windows Live ID)* is a code that Microsoft uses to authenticate your account, it is needed for this program to send the requests for checking the codes.
+### Установка из исходного кода
 
-How to get it:
+```bash
+# Клонируйте репозиторий
+git clone https://github.com/slonce70/Xbox-Code-Checker.git
+cd Xbox-Code-Checker
 
-1. Open [redeem.microsoft.com](http://redeem.microsoft.com/)
-2. Click `F12`, `CTRL + Shift + I`, or open devtools
-3. Go to the network tab
-4. Type any code into the redeem code field 
-5. Look for a request in the network tab with the redeem code in it (it should be red)
-6. Click it, look at the headers
-7. Find where it says Authorization, right-click the value of authorization, and click copy value
-8. This is your WLID
+# Установите зависимости
+pip install -r requirements.txt
 
-# Using Multiple WLIDs
-You can use multiple WLIDs with this tool, just add each wlid on a new line in the WLID input file.
+# Запустите приложение
+python main.py
+```
 
-# Other
-This is 100% for educational reasons, don't use it for anything else. This tool is free for people to use and learn from, don't try selling it.
+### Сборка исполняемого файла
+
+```bash
+# Установите PyInstaller
+pip install pyinstaller
+
+# Соберите приложение
+python build.py
+```
+
+Готовый исполняемый файл `XboxCodeChecker.exe` будет создан в папке `dist/`.
+
+## 📖 Использование
+
+### Пошаговая инструкция
+
+1. **Запуск** - Откройте приложение `python main.py` или запустите исполняемый файл
+2. **WLID токены** - Загрузите файл с WLID токенами через кнопку "Загрузить WLID"
+3. **Коды для проверки** - Загрузите файл с Xbox кодами через кнопку "Загрузить коды"
+4. **Настройки** - При необходимости настройте параметры (задержка, количество потоков)
+5. **Запуск проверки** - Нажмите "Начать проверку"
+6. **Мониторинг** - Отслеживайте прогресс в реальном времени
+7. **Экспорт** - Сохраните результаты в нужном формате
 
 
-# Credits
-- The first part of this readme was inspired by https://github.com/itschasa/Discord-Backup
+
+## Форматы файлов
+
+### Файл WLID
+Каждая строка должна содержать WLID токен:
+```
+WLID1.0="ваш_wlid_токен_здесь"
+```
+
+### Файл кодов
+Каждая строка должна содержать Xbox код в одном из форматов:
+```
+# С дефисами (стандартный формат)
+XXXXX-XXXXX-XXXXX-XXXXX-XXXXX
+
+# Без дефисов (будет автоматически отформатирован)
+XXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+**Примеры поддерживаемых форматов:**
+- `QHR66-3JVTV-WGTVX-JXW4Q-R767Z` (с дефисами)
+- `QHR663JVTVWGTVXJXW4QR767Z` (без дефисов - автоматически преобразуется)
+
+## Структура проекта
+
+```
+Xbox-Code-Checker/
+├── src/                     # Исходный код
+│   ├── core/               # Основная логика
+│   │   ├── code_checker.py    # Проверка кодов
+│   │   ├── progress_manager.py # Управление прогрессом
+│   │   └── retry_manager.py   # Система повторных попыток
+│   ├── data/               # Модели данных и API
+│   │   ├── api_client.py      # Microsoft API клиент
+│   │   ├── file_manager.py    # Работа с файлами
+│   │   └── models.py          # Модели данных
+│   ├── gui/                # GUI компоненты
+│   │   ├── components/        # UI компоненты
+│   │   ├── main_window.py     # Главное окно
+│   │   ├── results_viewer.py  # Просмотр результатов
+│   │   └── settings_dialog.py # Настройки
+│   └── app.py              # Главный класс приложения
+├── assets/                 # Ресурсы
+├── input/                  # Входные файлы
+├── output/                 # Выходные файлы
+├── tests/                  # Тесты
+├── main.py                 # Точка входа
+├── build.py               # Скрипт сборки
+├── config.json            # Конфигурация
+└── requirements.txt       # Зависимости
+```
+
+## 🔧 Системные требования
+
+| Компонент | Версия |
+|-----------|--------|
+| Python | 3.9+ |
+| CustomTkinter | 5.2.0+ |
+| Requests | 2.31.0+ |
+| Pillow | 10.0.0+ |
+| Packaging | 23.0+ |
+
+## 🧪 Тестирование
+
+```bash
+# Запуск всех тестов
+python -m pytest tests/
+
+# Запуск с подробным выводом
+python -m pytest tests/ -v
+
+# Запуск конкретного теста
+python -m pytest tests/test_code_checker.py
+```
+
+## 📊 Логирование
+
+Приложение автоматически создает файл `app.log` для отслеживания:
+- Ошибок API запросов
+- Статистики обработки
+- Системных событий
+- Отладочной информации
+
+## 📄 Лицензия
+
+Этот проект предназначен исключительно для образовательных целей.

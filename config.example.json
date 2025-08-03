@@ -1,0 +1,13 @@
+{
+  "theme": "dark",
+  "request_delay": 1.0,
+  "max_threads": 1,
+  "auto_save": true,
+  "export_format": "txt",
+  "window_width": 1113,
+  "window_height": 879,
+  "last_wlid_path": "",
+  "last_codes_path": "",
+  "last_export_path": "",
+  "max_file_size": 52428800
+}
