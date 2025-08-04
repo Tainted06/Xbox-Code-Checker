@@ -13,8 +13,6 @@ import socket
 from urllib3.exceptions import NewConnectionError, MaxRetryError
 
 from .models import WLIDToken, CodeResult, CodeStatus
-from .user_agents import get_compatible_user_agent
-from .browser_headers import get_conservative_headers
 from ..core.retry_manager import RetryManager, RetryConfig, RetryableOperation
 
 
@@ -82,9 +80,14 @@ class APIClient:
         self.session.mount('https://', adapter)
         
         # Setup session headers with conservative approach
-        user_agent = get_compatible_user_agent()
-        headers = get_conservative_headers()
-        headers['user-agent'] = user_agent
+        headers = {
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'accept-language': 'en-US,en;q=0.5',
+            'accept-encoding': 'gzip, deflate',
+            'connection': 'keep-alive',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
         
         self.session.headers.update(headers)
         
@@ -93,7 +96,7 @@ class APIClient:
     def update_user_agent(self) -> None:
         """Обновляет User-Agent с консервативными заголовками"""
         if self.session:
-            new_user_agent = get_compatible_user_agent()
+            new_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             # Обновляем только User-Agent, оставляя остальные заголовки без изменений
             self.session.headers['user-agent'] = new_user_agent
             self.logger.debug(f"User-Agent updated to: {new_user_agent[:50]}...")
@@ -394,8 +397,8 @@ class APIClient:
         # Enforce request delay
         self.enforce_request_delay()
         
-        # Get available WLID token (with smart waiting)
-        wlid_token = self.wait_for_available_token()
+        # Get available WLID token
+        wlid_token = self.get_available_wlid()
         if not wlid_token:
             # Check reason for unavailability
             valid_tokens = [token for token in self.wlid_tokens if token.is_valid]
