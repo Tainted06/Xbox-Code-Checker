@@ -105,7 +105,7 @@ Xbox-Code-Checker/
 │   │   ├── results_viewer.py  # Просмотр результатов
 │   │   └── settings_dialog.py # Настройки
 │   └── app.py              # Главный класс приложения
-├── assets/                 # Ресурсы
+
 ├── input/                  # Входные файлы
 ├── output/                 # Выходные файлы
 ├── tests/                  # Тесты

@@ -21,7 +21,7 @@ class FileManager:
     
     def ensure_directories(self) -> None:
         """Ensure required directories exist"""
-        directories = ['input', 'output', 'assets']
+        directories = ['input', 'output']
         for directory in directories:
             Path(directory).mkdir(exist_ok=True)
     

@@ -24,7 +24,7 @@ def build_exe():
         '--windowed',
         '--name=XboxCodeChecker',
         '--icon=assets/icon.ico' if os.path.exists('assets/icon.ico') else '',
-        '--add-data=assets;assets',
+
         '--hidden-import=customtkinter',
         '--hidden-import=PIL',
         'main.py'
