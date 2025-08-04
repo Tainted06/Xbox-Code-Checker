@@ -319,35 +319,7 @@ class APIClient:
         else:
             return random.choice(available_tokens)
     
-    def wait_for_available_token(self) -> Optional[WLIDToken]:
-        """Wait for an available token, with smart waiting"""
-        # Сначала проверяем, есть ли вообще валидные токены
-        valid_tokens = [token for token in self.wlid_tokens if token.is_valid]
-        if not valid_tokens:
-            return None  # Нет валидных токенов - сразу возвращаем None
-        
-        # Проверяем, есть ли доступные токены сейчас
-        token = self.get_available_wlid()
-        if token:
-            return token
-        
-        # Если все токены заблокированы лимитами, находим время до разблокировки
-        rate_limited_tokens = [token for token in valid_tokens if token.is_rate_limited()]
-        if rate_limited_tokens:
-            # Находим токен, который разблокируется раньше всех
-            next_available = min(rate_limited_tokens, 
-                               key=lambda t: t.rate_limited_until or datetime.max)
-            
-            if next_available.rate_limited_until:
-                wait_time = (next_available.rate_limited_until - datetime.now()).total_seconds()
-                
-                # Ждем максимум 60 секунд (можно настроить)
-                if 0 < wait_time <= 60:
-                    self.logger.info(f"Ожидание разблокировки токена: {wait_time:.1f} секунд")
-                    time.sleep(wait_time + 1)  # +1 секунда для гарантии
-                    return self.get_available_wlid()
-        
-        return None  # Не удалось получить токен
+
     
     def enforce_request_delay(self) -> None:
         """Enforce minimum delay between requests"""
