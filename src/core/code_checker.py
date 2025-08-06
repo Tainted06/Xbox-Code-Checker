@@ -9,17 +9,18 @@ from typing import List, Callable, Optional, Dict, Any
 from datetime import datetime
 import logging
 
-from ..data.models import WLIDToken, CodeResult, CodeStatus, CheckingSession, SessionStatus
+from ..data.models import WLIDToken, CodeResult, CodeStatus, CheckingSession, SessionStatus, AppConfig
 from ..data.api_client import APIClient
 
 
 class CodeChecker:
     """Handles the core logic of checking Xbox codes"""
     
-    def __init__(self, wlid_tokens: List[WLIDToken], max_threads: int = 5, request_delay: float = 1.0):
+    def __init__(self, wlid_tokens: List[WLIDToken], config: AppConfig):
         self.wlid_tokens = wlid_tokens
-        self.max_threads = max_threads
-        self.request_delay = request_delay
+        self.config = config
+        self.max_threads = config.max_threads
+        self.request_delay = config.request_delay
         
         # Threading control
         self.threads: List[threading.Thread] = []
@@ -106,7 +107,7 @@ class CodeChecker:
             self.retry_counts = {code: 0 for code in codes}
         
         # Initialize API client
-        self.api_client = APIClient(self.wlid_tokens, self.request_delay)
+        self.api_client = APIClient(self.wlid_tokens, self.config)
         
         # Clear queues
         while not self.code_queue.empty():

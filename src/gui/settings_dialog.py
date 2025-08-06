@@ -8,6 +8,7 @@ from tkinter import messagebox
 from typing import Optional, Callable, Dict, Any
 
 from ..data.models import AppConfig
+from ..utils.localization import _
 
 
 class SettingsDialog:
@@ -34,7 +35,7 @@ class SettingsDialog:
     def create_dialog(self) -> None:
         """Создает диалог настроек"""
         self.dialog = ctk.CTkToplevel(self.parent)
-        self.dialog.title("Настройки")
+        self.dialog.title(_("settings_dialog.title"))
         self.dialog.geometry("600x700")
         self.dialog.transient(self.parent)
         self.dialog.grab_set()
@@ -57,7 +58,7 @@ class SettingsDialog:
         # Заголовок
         title_label = ctk.CTkLabel(
             self.dialog,
-            text="Настройки",
+            text=_("settings_dialog.title"),
             font=ctk.CTkFont(size=20, weight="bold")
         )
         title_label.pack(pady=(20, 10))
@@ -67,9 +68,9 @@ class SettingsDialog:
         self.tabview.pack(fill="both", expand=True, padx=20, pady=10)
         
         # Добавляем вкладки
-        self.tabview.add("Внешний вид")
-        self.tabview.add("Производительность")
-        self.tabview.add("Экспорт")
+        self.tabview.add(_("settings_dialog.appearance_tab"))
+        self.tabview.add(_("settings_dialog.performance_tab"))
+        self.tabview.add(_("settings_dialog.export_tab"))
         
         # Настраиваем каждую вкладку
         self.setup_appearance_tab()
@@ -83,7 +84,7 @@ class SettingsDialog:
         # Кнопка применить
         apply_button = ctk.CTkButton(
             buttons_frame,
-            text="Применить",
+            text=_("settings_dialog.apply_button"),
             command=self.apply_settings,
             width=100,
             height=35,
@@ -96,7 +97,7 @@ class SettingsDialog:
         # Кнопка отмены
         cancel_button = ctk.CTkButton(
             buttons_frame,
-            text="Отмена",
+            text=_("settings_dialog.cancel_button"),
             command=self.dialog.destroy,
             width=100,
             height=35
@@ -106,7 +107,7 @@ class SettingsDialog:
         # Кнопка сброса
         reset_button = ctk.CTkButton(
             buttons_frame,
-            text="Сбросить",
+            text=_("settings_dialog.reset_button"),
             command=self.reset_to_defaults,
             width=140,
             height=35,
@@ -117,7 +118,7 @@ class SettingsDialog:
     
     def setup_appearance_tab(self) -> None:
         """Настраивает вкладку внешнего вида"""
-        tab = self.tabview.tab("Внешний вид")
+        tab = self.tabview.tab(_("settings_dialog.appearance_tab"))
         
         # Theme section
         theme_frame = ctk.CTkFrame(tab)
@@ -125,7 +126,7 @@ class SettingsDialog:
         
         theme_title = ctk.CTkLabel(
             theme_frame,
-            text="Тема",
+            text=_("settings_dialog.theme_title"),
             font=ctk.CTkFont(size=16, weight="bold")
         )
         theme_title.pack(pady=(15, 10))
@@ -136,7 +137,7 @@ class SettingsDialog:
         
         dark_radio = ctk.CTkRadioButton(
             theme_options_frame,
-            text="Темная тема",
+            text=_("settings_dialog.dark_theme"),
             variable=self.theme_var,
             value="dark"
         )
@@ -144,7 +145,7 @@ class SettingsDialog:
         
         light_radio = ctk.CTkRadioButton(
             theme_options_frame,
-            text="Светлая тема",
+            text=_("settings_dialog.light_theme"),
             variable=self.theme_var,
             value="light"
         )
@@ -152,15 +153,38 @@ class SettingsDialog:
         
         system_radio = ctk.CTkRadioButton(
             theme_options_frame,
-            text="Системная тема",
+            text=_("settings_dialog.system_theme"),
             variable=self.theme_var,
             value="system"
         )
         system_radio.pack(side="left", padx=20, pady=10)
+
+        # Language section
+        language_frame = ctk.CTkFrame(tab)
+        language_frame.pack(fill="x", padx=10, pady=10)
+
+        language_title = ctk.CTkLabel(
+            language_frame,
+            text=_("settings_dialog.language_title"),
+            font=ctk.CTkFont(size=16, weight="bold")
+        )
+        language_title.pack(pady=(15, 10))
+
+        language_options_frame = ctk.CTkFrame(language_frame)
+        language_options_frame.pack(fill="x", padx=15, pady=(5, 15))
+
+        from ...utils.localization import localization_manager
+        self.language_var = tk.StringVar(value=self.config['language'])
+        language_menu = ctk.CTkOptionMenu(
+            language_options_frame,
+            variable=self.language_var,
+            values=localization_manager.get_available_languages()
+        )
+        language_menu.pack(pady=10)
     
     def setup_performance_tab(self) -> None:
         """Настраивает вкладку производительности"""
-        tab = self.tabview.tab("Производительность")
+        tab = self.tabview.tab(_("settings_dialog.performance_tab"))
         
         # Request settings
         request_frame = ctk.CTkFrame(tab)
@@ -168,7 +192,7 @@ class SettingsDialog:
         
         request_title = ctk.CTkLabel(
             request_frame,
-            text="Настройки запросов",
+            text=_("settings_dialog.request_settings_title"),
             font=ctk.CTkFont(size=16, weight="bold")
         )
         request_title.pack(pady=(15, 10))
@@ -179,7 +203,7 @@ class SettingsDialog:
         
         delay_label = ctk.CTkLabel(
             delay_frame,
-            text="Задержка запросов (секунды):",
+            text=_("settings_dialog.request_delay_label"),
             font=ctk.CTkFont(size=12)
         )
         delay_label.pack(side="left", padx=10, pady=10)
@@ -208,7 +232,7 @@ class SettingsDialog:
         
         thread_title = ctk.CTkLabel(
             thread_frame,
-            text="Настройки потоков",
+            text=_("settings_dialog.threading_settings_title"),
             font=ctk.CTkFont(size=16, weight="bold")
         )
         thread_title.pack(pady=(15, 10))
@@ -219,7 +243,7 @@ class SettingsDialog:
         
         threads_label = ctk.CTkLabel(
             threads_frame,
-            text="Максимум потоков:",
+            text=_("settings_dialog.max_threads_label"),
             font=ctk.CTkFont(size=12)
         )
         threads_label.pack(side="left", padx=10, pady=10)
@@ -244,7 +268,7 @@ class SettingsDialog:
     
     def setup_export_tab(self) -> None:
         """Настраивает вкладку экспорта"""
-        tab = self.tabview.tab("Экспорт")
+        tab = self.tabview.tab(_("settings_dialog.export_tab"))
         
         # Default format
         format_frame = ctk.CTkFrame(tab)
@@ -252,7 +276,7 @@ class SettingsDialog:
         
         format_title = ctk.CTkLabel(
             format_frame,
-            text="Формат экспорта по умолчанию",
+            text=_("settings_dialog.default_export_format_title"),
             font=ctk.CTkFont(size=16, weight="bold")
         )
         format_title.pack(pady=(15, 10))
@@ -262,9 +286,9 @@ class SettingsDialog:
         format_options_frame.pack(fill="x", padx=15, pady=(5, 15))
         
         formats = [
-            ("txt", "TXT файлы"),
-            ("csv", "CSV файл"),
-            ("json", "JSON файл")
+            ("txt", _("settings_dialog.txt_format")),
+            ("csv", _("settings_dialog.csv_format")),
+            ("json", _("settings_dialog.json_format"))
         ]
         
         for value, text in formats:
@@ -282,14 +306,14 @@ class SettingsDialog:
         
         autosave_title = ctk.CTkLabel(
             autosave_frame,
-            text="Настройки автосохранения",
+            text=_("settings_dialog.autosave_settings_title"),
             font=ctk.CTkFont(size=16, weight="bold")
         )
         autosave_title.pack(pady=(15, 10))
         
         autosave_check = ctk.CTkCheckBox(
             autosave_frame,
-            text="Автоматически сохранять результаты при завершении проверки",
+            text=_("settings_dialog.autosave_checkbox"),
             variable=self.auto_save_var
         )
         autosave_check.pack(anchor="w", padx=15, pady=(5, 15))
@@ -307,15 +331,16 @@ class SettingsDialog:
         try:
             # Проверяем настройки
             if self.request_delay_var.get() < 0.1:
-                messagebox.showwarning("Неверная настройка", "Задержка запросов должна быть не менее 0.1 секунды")
+                messagebox.showwarning(_("settings_dialog.invalid_delay_warning_title"), _("settings_dialog.invalid_delay_warning"))
                 return
             
             if self.max_threads_var.get() < 1:
-                messagebox.showwarning("Неверная настройка", "Максимум потоков должно быть не менее 1")
+                messagebox.showwarning(_("settings_dialog.invalid_threads_warning_title"), _("settings_dialog.invalid_threads_warning"))
                 return
             
             # Update config
             self.config['theme'] = self.theme_var.get()
+            self.config['language'] = self.language_var.get()
             self.config['request_delay'] = self.request_delay_var.get()
             self.config['max_threads'] = self.max_threads_var.get()
             self.config['auto_save'] = self.auto_save_var.get()
@@ -331,15 +356,15 @@ class SettingsDialog:
             # Save to file
             new_config.save_to_file("config.json")
             
-            messagebox.showinfo("Настройки применены", "Настройки успешно применены!")
+            messagebox.showinfo(_("settings_dialog.settings_applied_success_title"), _("settings_dialog.settings_applied_success"))
             self.dialog.destroy()
             
         except Exception as e:
-            messagebox.showerror("Ошибка", f"Не удалось применить настройки: {str(e)}")
+            messagebox.showerror(_("settings_dialog.settings_apply_error_title"), _("settings_dialog.settings_apply_error", error=str(e)))
     
     def reset_to_defaults(self) -> None:
         """Сброс всех настроек к значениям по умолчанию"""
-        if messagebox.askyesno("Сброс настроек", "Вы уверены, что хотите сбросить все настройки к значениям по умолчанию?"):
+        if messagebox.askyesno(_("settings_dialog.reset_settings_confirm_title"), _("settings_dialog.reset_settings_confirm")):
             default_config = AppConfig()
             
             self.theme_var.set(default_config.theme)

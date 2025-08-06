@@ -11,6 +11,7 @@ from typing import Optional
 from .gui.main_window import MainWindow
 from .data.models import AppConfig
 from .data.file_manager import FileManager
+from .utils.localization import localization_manager
 
 
 class XboxCodeCheckerApp:
@@ -20,12 +21,15 @@ class XboxCodeCheckerApp:
         # Setup basic logging
         self.setup_logging()
         
+        # Load configuration
+        self.config = AppConfig.load_from_file("config.json")
+
+        # Setup localization
+        localization_manager.set_language(self.config.language)
+
         # Initialize CustomTkinter
         ctk.set_appearance_mode("dark")  # Default to dark mode
         ctk.set_default_color_theme("blue")
-        
-        # Load configuration
-        self.config = AppConfig.load_from_file("config.json")
         
         # Apply theme from config
         ctk.set_appearance_mode(self.config.theme)

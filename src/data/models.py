@@ -95,6 +95,7 @@ class CodeResult:
 class AppConfig:
     """Application configuration"""
     theme: str = "dark"
+    language: str = "ru"
     request_delay: float = 1.0
     max_threads: int = 5
     auto_save: bool = True
@@ -105,11 +106,13 @@ class AppConfig:
     last_codes_path: str = ""
     last_export_path: str = ""
     max_file_size: int = 50 * 1024 * 1024  # 50MB default limit
+    api_endpoint: str = "https://purchase.mp.microsoft.com/v7.0/tokenDescriptions/{code}"
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization"""
         return {
             'theme': self.theme,
+            'language': self.language,
             'request_delay': self.request_delay,
             'max_threads': self.max_threads,
             'auto_save': self.auto_save,
@@ -119,7 +122,8 @@ class AppConfig:
             'last_wlid_path': self.last_wlid_path,
             'last_codes_path': self.last_codes_path,
             'last_export_path': self.last_export_path,
-            'max_file_size': self.max_file_size
+            'max_file_size': self.max_file_size,
+            'api_endpoint': self.api_endpoint
         }
     
     @classmethod

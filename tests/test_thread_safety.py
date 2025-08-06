@@ -12,13 +12,15 @@ from src.core.code_checker import CodeChecker
 from src.data.models import WLIDToken, CodeResult, CodeStatus, SessionStatus
 
 
+from src.data.models import WLIDToken, CodeResult, CodeStatus, SessionStatus, AppConfig
 class TestCodeCheckerThreadSafety(unittest.TestCase):
     """Test thread safety of CodeChecker pending_codes operations"""
     
     def setUp(self):
         """Set up test fixtures"""
         self.wlid_tokens = [WLIDToken("test_token_1"), WLIDToken("test_token_2")]
-        self.checker = CodeChecker(self.wlid_tokens, max_threads=3, request_delay=0.1)
+        self.config = AppConfig(max_threads=3, request_delay=0.1)
+        self.checker = CodeChecker(self.wlid_tokens, self.config)
     
     def test_concurrent_pending_codes_access(self):
         """Test concurrent access to pending_codes doesn't cause race conditions"""
@@ -487,7 +489,8 @@ class TestGracefulThreadTermination(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures"""
         self.wlid_tokens = [WLIDToken("test_token_1")]
-        self.checker = CodeChecker(self.wlid_tokens, max_threads=2, request_delay=0.1)
+        self.config = AppConfig(max_threads=2, request_delay=0.1)
+        self.checker = CodeChecker(self.wlid_tokens, self.config)
     
     def tearDown(self):
         """Clean up after tests"""

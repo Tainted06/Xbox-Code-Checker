@@ -1,5 +1,6 @@
 {
   "theme": "dark",
+  "language": "ru",
   "request_delay": 1.0,
   "max_threads": 1,
   "auto_save": true,
@@ -9,5 +10,6 @@
   "last_wlid_path": "",
   "last_codes_path": "",
   "last_export_path": "",
-  "max_file_size": 52428800
+  "max_file_size": 52428800,
+  "api_endpoint": "https://purchase.mp.microsoft.com/v7.0/tokenDescriptions/{code}"
 }

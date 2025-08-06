@@ -24,16 +24,17 @@ class InvalidWLIDTokenError(Exception):
         super().__init__(self.message)
 
 
+from .models import WLIDToken, CodeResult, CodeStatus, AppConfig
 class APIClient:
     """Handles communication with Microsoft API with enhanced network error handling and retry logic"""
     
-    def __init__(self, wlid_tokens: List[WLIDToken], request_delay: float = 1.0, 
-                 connection_timeout: float = 10.0, read_timeout: float = 30.0,
+    def __init__(self, wlid_tokens: List[WLIDToken], config: AppConfig,
                  retry_config: Optional[RetryConfig] = None):
         self.wlid_tokens = wlid_tokens
-        self.request_delay = request_delay
-        self.connection_timeout = connection_timeout
-        self.read_timeout = read_timeout
+        self.config = config
+        self.request_delay = config.request_delay
+        self.connection_timeout = 10.0  # TODO: Move to config
+        self.read_timeout = 30.0  # TODO: Move to config
         self.session = None
         self.last_request_time = 0
         self.rate_limit_until = None
@@ -429,7 +430,7 @@ class APIClient:
         self._ensure_session_active()
         
         # Prepare request
-        url = f"https://purchase.mp.microsoft.com/v7.0/tokenDescriptions/{code}"
+        url = self.config.api_endpoint.format(code=code)
         params = {
             'market': 'US',
             'language': 'en-US',

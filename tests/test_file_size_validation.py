@@ -195,7 +195,7 @@ class TestFileSizeValidation(unittest.TestCase):
         
         self.assertEqual(len(errors), 0)  # No errors
         self.assertEqual(len(tokens), 1)  # One token should be read
-        self.assertEqual(tokens[0].token, 'WLID1.0="valid_token_123"')
+        self.assertEqual(tokens[0].token, 'valid_token_123')
     
     def test_read_codes_file_valid_size(self):
         """Test that read_codes_file works with valid file size"""

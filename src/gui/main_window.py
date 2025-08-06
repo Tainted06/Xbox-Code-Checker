@@ -17,6 +17,8 @@ from .wlid_manager_dialog import WLIDManagerDialog
 from .components.file_input_handler import FileInputHandler
 from .components.progress_display_manager import ProgressDisplayManager
 from .components.results_display_manager import ResultsDisplayManager
+from .components.export_format_dialog import ExportFormatDialog
+from ..utils.localization import _
 
 
 class MainWindow:
@@ -115,7 +117,7 @@ class MainWindow:
         # Заголовок
         title_label = ctk.CTkLabel(
             self.control_frame,
-            text="Управление",
+            text=_("main_window.controls_title"),
             font=ctk.CTkFont(size=16, weight="bold")
         )
         title_label.pack(pady=(10, 5))
@@ -127,7 +129,7 @@ class MainWindow:
         # Кнопка запуска
         self.start_button = ctk.CTkButton(
             buttons_frame,
-            text="Начать проверку",
+            text=_("main_window.start_button"),
             command=self.start_checking,
             width=140,
             fg_color="#00aa00",
@@ -138,7 +140,7 @@ class MainWindow:
         # Кнопка паузы
         self.pause_button = ctk.CTkButton(
             buttons_frame,
-            text="Пауза",
+            text=_("main_window.pause_button"),
             command=self.pause_checking,
             width=100,
             fg_color="#ffaa00",
@@ -150,7 +152,7 @@ class MainWindow:
         # Кнопка остановки
         self.stop_button = ctk.CTkButton(
             buttons_frame,
-            text="Стоп",
+            text=_("main_window.stop_button"),
             command=self.stop_checking,
             width=100,
             fg_color="#aa0000",
@@ -162,7 +164,7 @@ class MainWindow:
         # Кнопка настроек
         self.settings_button = ctk.CTkButton(
             buttons_frame,
-            text="Настройки",
+            text=_("main_window.settings_button"),
             command=self.open_settings,
             width=100
         )
@@ -171,7 +173,7 @@ class MainWindow:
         # Кнопка управления WLID токенами
         self.wlid_manager_button = ctk.CTkButton(
             buttons_frame,
-            text="WLID токены",
+            text=_("main_window.wlid_manager_button"),
             command=self.open_wlid_manager,
             width=120
         )
@@ -180,7 +182,7 @@ class MainWindow:
         # Кнопка экспорта
         self.export_button = ctk.CTkButton(
             buttons_frame,
-            text="Экспорт результатов",
+            text=_("main_window.export_button"),
             command=self.export_results,
             width=140,
             state="disabled"
@@ -222,13 +224,13 @@ class MainWindow:
         # Update WLID manager button state
         if tokens:
             self.wlid_manager_button.configure(
-                text=f"WLID токены ({len(tokens)})",
+                text=_("main_window.wlid_manager_button") + f" ({len(tokens)})",
                 fg_color="#0078d4",
                 hover_color="#106ebe"
             )
         else:
             self.wlid_manager_button.configure(
-                text="WLID токены",
+                text=_("main_window.wlid_manager_button"),
                 fg_color="#1f538d",
                 hover_color="#14375e"
             )
@@ -240,11 +242,11 @@ class MainWindow:
     def start_checking(self) -> None:
         """Запускает процесс проверки кодов"""
         if not self.wlid_tokens:
-            messagebox.showerror("Ошибка", "Сначала загрузите WLID токены")
+            messagebox.showerror(_("main_window.no_wlid_error_title"), _("main_window.no_wlid_error"))
             return
         
         if not self.codes:
-            messagebox.showerror("Ошибка", "Сначала загрузите коды")
+            messagebox.showerror(_("main_window.no_codes_error_title"), _("main_window.no_codes_error"))
             return
         
         # Очищаем предыдущие результаты
@@ -255,8 +257,7 @@ class MainWindow:
         # Инициализируем проверщик кодов
         self.code_checker = CodeChecker(
             self.wlid_tokens,
-            max_threads=self.config.max_threads,
-            request_delay=self.config.request_delay
+            config=self.config
         )
         
         # Устанавливаем колбэки
@@ -274,7 +275,7 @@ class MainWindow:
         
         # Обновляем состояние кнопок
         self.start_button.configure(state="disabled")
-        self.pause_button.configure(state="normal", text="Пауза")
+        self.pause_button.configure(state="normal", text=_("main_window.pause_button"))
         self.stop_button.configure(state="normal")
         
         # Start checking in separate thread
@@ -292,13 +293,13 @@ class MainWindow:
         
         if self.code_checker.session.status.value == "running":
             if self.code_checker.pause_checking():
-                self.pause_button.configure(text="Продолжить")
+                self.pause_button.configure(text=_("main_window.resume_button"))
                 self.progress_manager.pause_session()
                 if self.progress_display_manager:
                     self.progress_display_manager.pause_session()
         else:
             if self.code_checker.resume_checking():
-                self.pause_button.configure(text="Пауза")
+                self.pause_button.configure(text=_("main_window.pause_button"))
                 self.progress_manager.resume_session()
                 if self.progress_display_manager:
                     self.progress_display_manager.resume_session()
@@ -313,7 +314,7 @@ class MainWindow:
         
         # Обновляем состояние кнопок
         self.start_button.configure(state="normal")
-        self.pause_button.configure(state="disabled", text="Пауза")
+        self.pause_button.configure(state="disabled", text=_("main_window.pause_button"))
         self.stop_button.configure(state="disabled")
         self.export_button.configure(state="normal" if self.current_results else "disabled")
     
@@ -352,7 +353,7 @@ class MainWindow:
         
         # Обновляем состояние кнопок
         self.start_button.configure(state="normal")
-        self.pause_button.configure(state="disabled", text="Пауза")
+        self.pause_button.configure(state="disabled", text=_("main_window.pause_button"))
         self.stop_button.configure(state="disabled")
         self.export_button.configure(state="normal")
         
@@ -364,22 +365,22 @@ class MainWindow:
             try:
                 # Создаем резервную копию результатов
                 backup_path = self.file_manager.backup_results(self.current_results, stats)
-                auto_save_message = f"\n\nРезультаты автоматически сохранены в:\n{backup_path}"
+                auto_save_message = _("main_window.autosave_success", path=backup_path)
             except Exception as e:
-                auto_save_message = f"\n\nОшибка автосохранения: {str(e)}"
+                auto_save_message = _("main_window.autosave_error", error=str(e))
         else:
             auto_save_message = ""
         
         # Показываем сообщение о завершении
-        message = (f"Проверка завершена!\n\n"
-                  f"Всего: {stats['total']}\n"
-                  f"Рабочие: {stats['valid']}\n"
-                  f"Использованные: {stats['used']}\n"
-                  f"Неверные: {stats['invalid']}\n"
-                  f"Ошибки: {stats['error']}\n"
-                  f"Пропущены: {stats.get('skipped', 0)}")
+        message = _("main_window.checking_completed_message",
+                    total=stats['total'],
+                    valid=stats['valid'],
+                    used=stats['used'],
+                    invalid=stats['invalid'],
+                    error=stats['error'],
+                    skipped=stats.get('skipped', 0))
         
-        messagebox.showinfo("Завершено", message + auto_save_message)
+        messagebox.showinfo(_("main_window.checking_completed_title"), message + auto_save_message)
     
 
     
@@ -402,7 +403,7 @@ class MainWindow:
     def open_wlid_manager(self) -> None:
         """Open WLID tokens manager dialog"""
         if not self.code_checker:
-            messagebox.showwarning("Предупреждение", "Сначала загрузите WLID токены и запустите проверку")
+            messagebox.showwarning(_("main_window.wlid_manager_warning_title"), _("main_window.wlid_manager_warning"))
             return
         
         if self.wlid_manager_dialog is None or not hasattr(self.wlid_manager_dialog, 'dialog') or not self.wlid_manager_dialog.dialog.winfo_exists():
@@ -440,26 +441,26 @@ class MainWindow:
             
             if total == 0:
                 self.wlid_manager_button.configure(
-                    text="WLID токены",
+                    text=_("main_window.wlid_manager_button"),
                     fg_color="#1f538d",
                     hover_color="#14375e"
                 )
             elif invalid > 0:
                 self.wlid_manager_button.configure(
-                    text=f"WLID токены ({available}/{total})",
+                    text=f"{_('main_window.wlid_manager_button')} ({available}/{total})",
                     fg_color="#cc4400",
                     hover_color="#dd5500"
                 )
             else:
                 self.wlid_manager_button.configure(
-                    text=f"WLID токены ({total})",
+                    text=f"{_('main_window.wlid_manager_button')} ({total})",
                     fg_color="#00aa00",
                     hover_color="#00cc00"
                 )
         except Exception:
             # Fallback if there's an error
             self.wlid_manager_button.configure(
-                text="WLID токены",
+                text=_("main_window.wlid_manager_button"),
                 fg_color="#1f538d",
                 hover_color="#14375e"
             )
@@ -490,7 +491,7 @@ class MainWindow:
             export_results = self.current_results
             
         if not export_results:
-            messagebox.showwarning("Предупреждение", "Нет результатов для экспорта")
+            messagebox.showwarning(_("main_window.no_results_to_export_title"), _("main_window.no_results_to_export"))
             return
         
         # Запрашиваем формат экспорта
@@ -503,40 +504,40 @@ class MainWindow:
         try:
             if export_format == "txt":
                 file_path = filedialog.asksaveasfilename(
-                    title="Экспорт результатов",
+                    title=_("main_window.export_title"),
                     defaultextension=".txt",
-                    filetypes=[("Текстовые файлы", "*.txt")],
+                    filetypes=[(_("main_window.txt_files"), "*.txt")],
                     initialdir="output"
                 )
                 if file_path:
                     exported_files = self.file_manager.export_results_txt(export_results, file_path)
-                    messagebox.showinfo("Успешно", f"Результаты экспортированы в {len(exported_files)} файлов")
+                    messagebox.showinfo(_("main_window.export_success_title"), _("main_window.export_success", count=len(exported_files)))
             
             elif export_format == "csv":
                 file_path = filedialog.asksaveasfilename(
-                    title="Экспорт результатов",
+                    title=_("main_window.export_title"),
                     defaultextension=".csv",
-                    filetypes=[("CSV файлы", "*.csv")],
+                    filetypes=[(_("main_window.csv_files"), "*.csv")],
                     initialdir="output"
                 )
                 if file_path:
                     self.file_manager.export_results_csv(export_results, file_path)
-                    messagebox.showinfo("Успешно", f"Результаты экспортированы в {file_path}")
+                    messagebox.showinfo(_("main_window.export_success_title"), _("main_window.export_success_single_file", path=file_path))
             
             elif export_format == "json":
                 file_path = filedialog.asksaveasfilename(
-                    title="Экспорт результатов",
+                    title=_("main_window.export_title"),
                     defaultextension=".json",
-                    filetypes=[("JSON файлы", "*.json")],
+                    filetypes=[(_("main_window.json_files"), "*.json")],
                     initialdir="output"
                 )
                 if file_path:
                     stats = self.progress_manager.get_statistics_summary()
                     self.file_manager.export_results_json(export_results, file_path, stats)
-                    messagebox.showinfo("Успешно", f"Результаты экспортированы в {file_path}")
+                    messagebox.showinfo(_("main_window.export_success_title"), _("main_window.export_success_single_file", path=file_path))
         
         except Exception as e:
-            messagebox.showerror("Ошибка", f"Не удалось экспортировать результаты: {str(e)}")
+            messagebox.showerror(_("main_window.export_error_title"), _("main_window.export_error", error=str(e)))
     
     def cleanup(self) -> None:
         """Cleanup resources"""
@@ -549,49 +550,3 @@ class MainWindow:
         if self.results_display_manager:
             self.results_display_manager.cleanup()
 
-
-class ExportFormatDialog:
-    """Простой диалог для выбора формата экспорта"""
-    
-    def __init__(self, parent):
-        self.result = None
-        
-        # Создаем диалог
-        self.dialog = ctk.CTkToplevel(parent)
-        self.dialog.title("Формат экспорта")
-        self.dialog.geometry("350x250")
-        self.dialog.transient(parent)
-        self.dialog.grab_set()
-        
-        # Центрируем диалог
-        self.dialog.update_idletasks()
-        x = parent.winfo_x() + (parent.winfo_width() // 2) - 175
-        y = parent.winfo_y() + (parent.winfo_height() // 2) - 125
-        self.dialog.geometry(f"350x250+{x}+{y}")
-        
-        # Создаем содержимое
-        label = ctk.CTkLabel(self.dialog, text="Выберите формат экспорта:", font=ctk.CTkFont(size=14))
-        label.pack(pady=20)
-        
-        # Кнопки форматов
-        txt_btn = ctk.CTkButton(self.dialog, text="TXT (Отдельные файлы)", command=lambda: self.select_format("txt"))
-        txt_btn.pack(pady=5)
-        
-        csv_btn = ctk.CTkButton(self.dialog, text="CSV (Один файл)", command=lambda: self.select_format("csv"))
-        csv_btn.pack(pady=5)
-        
-        json_btn = ctk.CTkButton(self.dialog, text="JSON (С метаданными)", command=lambda: self.select_format("json"))
-        json_btn.pack(pady=5)
-        
-        cancel_btn = ctk.CTkButton(self.dialog, text="Отмена", command=self.dialog.destroy)
-        cancel_btn.pack(pady=10)
-    
-    def select_format(self, format_type: str) -> None:
-        """Выбрать формат экспорта"""
-        self.result = format_type
-        self.dialog.destroy()
-    
-    def get_format(self) -> Optional[str]:
-        """Получить выбранный формат"""
-        self.dialog.wait_window()
-        return self.result

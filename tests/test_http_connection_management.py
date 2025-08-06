@@ -8,7 +8,7 @@ from unittest.mock import patch, MagicMock, Mock
 import requests
 
 from src.data.api_client import APIClient
-from src.data.models import WLIDToken
+from src.data.models import WLIDToken, AppConfig
 
 
 class TestHTTPConnectionManagement(unittest.TestCase):
@@ -21,10 +21,11 @@ class TestHTTPConnectionManagement(unittest.TestCase):
             WLIDToken(token="test_token_1"),
             WLIDToken(token="test_token_2")
         ]
+        self.config = AppConfig()
     
     def test_api_client_initialization(self):
         """Test APIClient initialization with connection pooling"""
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # Check that session is initialized
         self.assertIsNotNone(client.session)
@@ -42,12 +43,13 @@ class TestHTTPConnectionManagement(unittest.TestCase):
     
     def test_api_client_custom_timeouts(self):
         """Test APIClient initialization with custom timeouts"""
+        self.config.request_delay = 0.1
         client = APIClient(
             self.test_tokens, 
-            request_delay=0.1,
-            connection_timeout=5.0,
-            read_timeout=15.0
+            self.config
         )
+        client.connection_timeout = 5.0
+        client.read_timeout = 15.0
         
         self.assertEqual(client.connection_timeout, 5.0)
         self.assertEqual(client.read_timeout, 15.0)
@@ -56,7 +58,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
     
     def test_context_manager_support(self):
         """Test APIClient as context manager"""
-        with APIClient(self.test_tokens, request_delay=0.1) as client:
+        with APIClient(self.test_tokens, self.config) as client:
             self.assertIsNotNone(client.session)
             self.assertFalse(client._session_closed)
         
@@ -66,7 +68,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
     
     def test_manual_close(self):
         """Test manual session closing"""
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         self.assertIsNotNone(client.session)
         self.assertFalse(client._session_closed)
@@ -78,7 +80,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
     
     def test_double_close(self):
         """Test that double close doesn't cause errors"""
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # First close
         client.close()
@@ -96,7 +98,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         mock_session = MagicMock()
         mock_session_class.return_value = mock_session
         
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # Close the session
         client.close()
@@ -112,7 +114,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
     
     def test_update_timeouts(self):
         """Test updating connection and read timeouts"""
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # Update timeouts
         client.update_timeouts(connection_timeout=7.0, read_timeout=20.0)
@@ -137,12 +139,13 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         mock_response.json.return_value = {'tokenState': 'Active'}
         mock_get.return_value = mock_response
         
+        self.config.request_delay = 0.1
         client = APIClient(
             self.test_tokens, 
-            request_delay=0.1,
-            connection_timeout=5.0,
-            read_timeout=15.0
+            self.config,
         )
+        client.connection_timeout = 5.0
+        client.read_timeout = 15.0
         
         # Make a request
         result = client.check_code("XXXXX-XXXXX-XXXXX-XXXXX-XXXXX")
@@ -166,7 +169,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         # Mock connection error
         mock_get.side_effect = requests.exceptions.ConnectionError("Connection failed")
         
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         result = client.check_code("XXXXX-XXXXX-XXXXX-XXXXX-XXXXX")
         
@@ -182,7 +185,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         # Mock timeout error
         mock_get.side_effect = requests.exceptions.Timeout("Request timed out")
         
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         result = client.check_code("XXXXX-XXXXX-XXXXX-XXXXX-XXXXX")
         
@@ -198,7 +201,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         mock_session = MagicMock()
         mock_session_class.return_value = mock_session
         
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # Verify that mount was called for both HTTP and HTTPS
         mount_calls = mock_session.mount.call_args_list
@@ -222,7 +225,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         mock_response.json.return_value = {'tokenState': 'Active'}
         mock_get.return_value = mock_response
         
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # Close the session
         client.close()
@@ -242,7 +245,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
     
     def test_destructor_cleanup(self):
         """Test that destructor properly cleans up resources"""
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # Store reference to check state
         session_closed_ref = client._session_closed
@@ -259,7 +262,7 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         # Mock session.close() to raise an exception
         mock_close.side_effect = Exception("Close failed")
         
-        client = APIClient(self.test_tokens, request_delay=0.1)
+        client = APIClient(self.test_tokens, self.config)
         
         # Close should not raise exception even if session.close() fails
         try:
@@ -281,10 +284,10 @@ class TestHTTPConnectionManagement(unittest.TestCase):
         
         client = APIClient(
             self.test_tokens, 
-            request_delay=0.1,
-            connection_timeout=8.0,
-            read_timeout=25.0
+            self.config,
         )
+        client.connection_timeout=8.0
+        client.read_timeout=25.0
         
         # Test tokens
         results = client.test_wlid_tokens()

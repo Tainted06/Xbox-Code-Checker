@@ -75,8 +75,17 @@ class FileManager:
     
     def read_wlid_file(self, filepath: str) -> Tuple[List[WLIDToken], List[str]]:
         """
-        Читает WLID токены из файла
-        Возвращает: (валидные_токены, ошибки)
+        Reads WLID tokens from a file.
+
+        This function handles different formats of WLID tokens, including
+        plain tokens and tokens in the format 'WLID1.0="..."'.
+
+        Args:
+            filepath: The path to the file containing the WLID tokens.
+
+        Returns:
+            A tuple containing a list of valid WLIDToken objects and a list of
+            error messages.
         """
         tokens = []
         errors = []
@@ -103,11 +112,9 @@ class FileManager:
                 
                 try:
                     # Обрабатываем разные форматы WLID
-                    if line.startswith('WLID1.0='):
-                        token_value = line
-                    else:
-                        # Предполагаем, что это просто значение токена
-                        token_value = line.strip('"\'')
+                    token_value = line
+                    if token_value.startswith('WLID1.0='):
+                        token_value = token_value.split('=', 1)[1].strip('"')
                     
                     if token_value:
                         tokens.append(WLIDToken(token=token_value))
@@ -152,8 +159,17 @@ class FileManager:
 
     def read_codes_file(self, filepath: str) -> Tuple[List[str], List[str]]:
         """
-        Читает Xbox коды из файла
-        Возвращает: (валидные_коды, ошибки)
+        Reads Xbox codes from a file.
+
+        This function reads codes from a file, formats them to the standard
+        Xbox code format (XXXXX-XXXXX-XXXXX-XXXXX-XXXXX), and validates them.
+
+        Args:
+            filepath: The path to the file containing the Xbox codes.
+
+        Returns:
+            A tuple containing a list of valid Xbox codes and a list of
+            error messages.
         """
         codes = []
         errors = []
@@ -179,16 +195,14 @@ class FileManager:
                     continue
                 
                 # Пытаемся отформатировать код
-                formatted_code = self.format_xbox_code(line)
+                formatted_code = self.format_xbox_code(line.strip())
                 
                 if formatted_code:
                     codes.append(formatted_code)
+                elif self.validate_xbox_code(line.strip()):
+                    codes.append(line.strip().upper())
                 else:
-                    # Проверяем, может код уже в правильном формате
-                    if self.validate_xbox_code(line):
-                        codes.append(line.upper())
-                    else:
-                        errors.append(f"Строка {line_num}: Неверный формат кода '{line}' (должно быть 25 символов)")
+                    errors.append(f"Строка {line_num}: Неверный формат кода '{line}' (должно быть 25 или 29 символов)")
             
             if not codes:
                 errors.append("В файле не найдено валидных Xbox кодов")
@@ -225,7 +239,17 @@ class FileManager:
         return True
     
     def export_results_txt(self, results: List[CodeResult], base_path: str) -> List[str]:
-        """Экспортирует результаты в отдельные TXT файлы"""
+        """
+        Exports the results to separate TXT files based on their status.
+
+        Args:
+            results: A list of CodeResult objects.
+            base_path: The base path for the exported files. The directory of
+                this path will be used to create the files.
+
+        Returns:
+            A list of paths to the exported files.
+        """
         exported_files = []
         
         # Группируем результаты по статусу
@@ -268,7 +292,13 @@ class FileManager:
         return exported_files
     
     def export_results_csv(self, results: List[CodeResult], filepath: str) -> None:
-        """Экспортирует результаты в CSV файл"""
+        """
+        Exports the results to a CSV file.
+
+        Args:
+            results: A list of CodeResult objects.
+            filepath: The path to the CSV file.
+        """
         try:
             with open(filepath, 'w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
@@ -299,7 +329,14 @@ class FileManager:
     
     def export_results_json(self, results: List[CodeResult], filepath: str, 
                            session_stats: Optional[Dict[str, Any]] = None) -> None:
-        """Экспортирует результаты в JSON файл с метаданными"""
+        """
+        Exports the results to a JSON file with metadata.
+
+        Args:
+            results: A list of CodeResult objects.
+            filepath: The path to the JSON file.
+            session_stats: Optional dictionary with session statistics.
+        """
         try:
             export_data = {
                 'время_экспорта': datetime.now().isoformat(),
