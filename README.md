@@ -62,7 +62,7 @@ How to get it:
 2. Click `F12`, `CTRL + Shift + I`, or open devtools
 3. Go to the network tab
 4. Type any code into the redeem code field 
-5. Look for a request in the network tab with the redeem code in it (it should be red)
+5. Look for a request in the network tab called PrepareRedeem
 6. Click it, look at the headers
 7. Find where it says Authorization, right-click the value of authorization, and click copy value
 8. This is your WLID
