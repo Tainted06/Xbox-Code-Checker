@@ -1,3 +1,6 @@
+# This project is no longer being maintained 
+# If you'd like to buy the project from me, this repo and the source code of the paid version, contact @TaintedDev on telegram.
+
 <div align="center">
     <h1>Xbox/Microsoft Code Checker</h1>
     <p>Checks Microsoft/Xbox codes for valid, invalid, and used codes! This does not check Windows licenses. A paid version with more features is avaliable, contact @TaintedDev on telegram for more information.</p>
